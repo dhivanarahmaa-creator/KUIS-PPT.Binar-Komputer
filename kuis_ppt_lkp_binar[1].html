@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis Microsoft PowerPoint — LKP Binar Komputer</title>
+<style>
+  :root{--primary:#7B2D8B;--accent:#9B3DB7;--light:#F3E6FF;--success:#1e7e34;--danger:#c00000;--warning:#856404;--bg:#faf0ff;--card:#fff;--text:#2a002e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);}
+  .site-header{background:linear-gradient(135deg,var(--primary) 0%,#c471ed 100%);color:#fff;padding:28px 24px;text-align:center;}
+  .site-header h1{font-size:1.8rem;margin-bottom:6px;}
+  .site-header p{opacity:.85;font-size:.95rem;}
+  .badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:.82rem;margin:8px 4px 0;}
+  .progress-bar-wrap{background:var(--primary);padding:12px 24px;position:sticky;top:0;z-index:100;}
+  .progress-label{display:flex;justify-content:space-between;color:#fff;font-size:.82rem;margin-bottom:6px;}
+  .progress-track{background:rgba(255,255,255,.25);border-radius:4px;height:8px;}
+  .progress-fill{background:#e0b0ff;height:8px;border-radius:4px;transition:width .4s ease;}
+  .container{max-width:860px;margin:0 auto;padding:20px 16px;}
+  .score-panel{background:var(--card);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;gap:16px;flex-wrap:wrap;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  .score-box{flex:1;min-width:120px;text-align:center;padding:10px;border-radius:8px;background:var(--bg);}
+  .score-box .num{font-size:1.8rem;font-weight:700;color:var(--primary);}
+  .score-box .lbl{font-size:.78rem;color:#666;margin-top:2px;}
+  .section-header{background:var(--primary);color:#fff;padding:12px 20px;border-radius:8px 8px 0 0;font-weight:700;font-size:1rem;margin-top:28px;}
+  .q-card{background:var(--card);border-radius:0 0 8px 8px;margin-bottom:8px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.06);}
+  .q-header{padding:14px 18px 10px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;user-select:none;}
+  .q-num{background:var(--accent);color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;}
+  .q-text{font-weight:600;font-size:.95rem;line-height:1.5;flex:1;}
+  .q-status{font-size:1.2rem;margin-left:auto;}
+  .q-body{padding:0 18px 16px 60px;}
+  .q-meta{font-size:.78rem;color:#888;margin-bottom:10px;}
+  .options{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+  .opt{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:2px solid #e0e0e0;border-radius:8px;cursor:pointer;transition:all .2s;font-size:.9rem;line-height:1.4;}
+  .opt:hover:not(.disabled){border-color:var(--accent);background:var(--light);}
+  .opt.selected{border-color:var(--accent);background:#f0e0ff;}
+  .opt.correct{border-color:var(--success);background:#d4edda;}
+  .opt.wrong{border-color:var(--danger);background:#f8d7da;}
+  .opt.disabled{cursor:default;}
+  .opt-letter{font-weight:700;color:var(--accent);min-width:20px;}
+  .opt.correct .opt-letter{color:var(--success);}
+  .opt.wrong .opt-letter{color:var(--danger);}
+  .btn-submit{background:var(--accent);color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:600;transition:background .2s;}
+  .btn-submit:hover{background:var(--primary);}
+  .btn-submit:disabled{background:#aaa;cursor:default;}
+  .explanation{background:#fdf0ff;border-left:4px solid var(--accent);padding:10px 14px;border-radius:4px;font-size:.87rem;margin-top:10px;display:none;line-height:1.6;}
+  .explanation.show{display:block;}
+  .result-label{display:inline-block;padding:3px 10px;border-radius:12px;font-size:.78rem;font-weight:700;margin-bottom:8px;}
+  .result-label.correct{background:#d4edda;color:var(--success);}
+  .result-label.wrong{background:#f8d7da;color:var(--danger);}
+  .essay-card{background:var(--card);border-radius:0 0 8px 8px;padding:16px 20px;margin-bottom:8px;box-shadow:0 2px 6px rgba(0,0,0,.06);}
+  .essay-card .q-header-e{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;}
+  .essay-textarea{width:100%;border:2px solid #e0e0e0;border-radius:8px;padding:10px;font-size:.88rem;font-family:inherit;resize:vertical;min-height:100px;transition:border .2s;}
+  .essay-textarea:focus{outline:none;border-color:var(--accent);}
+  .rubrik{background:var(--light);border-radius:8px;padding:12px 14px;margin-top:10px;font-size:.84rem;}
+  .rubrik strong{color:var(--primary);display:block;margin-bottom:6px;}
+  .rubrik ul{padding-left:18px;}
+  .rubrik li{margin-bottom:4px;}
+  .toggle-rubrik{background:none;border:1px solid var(--accent);color:var(--accent);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.82rem;margin-top:8px;}
+  .toggle-rubrik:hover{background:var(--light);}
+  .final-panel{display:none;background:var(--card);border-radius:12px;padding:28px;text-align:center;margin:28px 0;box-shadow:0 4px 16px rgba(0,0,0,.1);}
+  .final-panel.show{display:block;}
+  .final-score{font-size:4rem;font-weight:900;color:var(--primary);margin:16px 0;}
+  .final-grade{font-size:1.5rem;font-weight:700;margin-bottom:12px;}
+  .grade-A{color:var(--success);}
+  .grade-B{color:var(--accent);}
+  .grade-C{color:var(--warning);}
+  .grade-D{color:var(--danger);}
+  .btn-reset{background:var(--primary);color:#fff;border:none;padding:12px 32px;border-radius:8px;cursor:pointer;font-size:1rem;font-weight:600;margin-top:16px;}
+  .final-detail{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin:16px 0;}
+  .f-box{background:var(--bg);border-radius:8px;padding:12px 20px;}
+  .f-box .n{font-size:1.6rem;font-weight:700;color:var(--primary);}
+  .f-box .l{font-size:.8rem;color:#666;}
+  .btn-finish{background:linear-gradient(135deg,var(--primary),#c471ed);color:#fff;border:none;padding:14px 40px;border-radius:10px;cursor:pointer;font-size:1.1rem;font-weight:700;display:block;margin:28px auto;width:fit-content;box-shadow:0 4px 12px rgba(123,45,139,.3);}
+  .tag{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.72rem;font-weight:700;margin-left:8px;}
+  .tag-easy{background:#d4edda;color:var(--success);}
+  .tag-med{background:#fff3cd;color:var(--warning);}
+  .tag-hard{background:#f8d7da;color:var(--danger);}
+  @media(max-width:600px){.q-body{padding-left:16px;}}
+</style>
+</head>
+<body>
+<div class="site-header">
+  <h1>🎨 Kuis Microsoft PowerPoint</h1>
+  <p>LKP Binar Komputer Tegal — Program MS Office + AI Storytelling</p>
+  <span class="badge">40 Pilihan Ganda</span>
+  <span class="badge">10 Essay</span>
+  <span class="badge">Total 50 Soal</span>
+</div>
+<div class="progress-bar-wrap">
+  <div class="progress-label">
+    <span id="prog-text">0 dari 50 soal dijawab</span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+<div class="container">
+  <div class="score-panel">
+    <div class="score-box"><div class="num" id="sc-answered">0</div><div class="lbl">Dijawab</div></div>
+    <div class="score-box"><div class="num" id="sc-correct">0</div><div class="lbl">✅ Benar</div></div>
+    <div class="score-box"><div class="num" id="sc-wrong">0</div><div class="lbl">❌ Salah</div></div>
+    <div class="score-box"><div class="num" id="sc-score">0</div><div class="lbl">Nilai PG</div></div>
+  </div>
+  <div class="section-header">🔵 BAGIAN A — PILIHAN GANDA (40 Soal)</div>
+  <div id="pg-container"></div>
+  <div class="section-header" style="margin-top:32px">📝 BAGIAN B — ESSAY (10 Soal)</div>
+  <div id="essay-container"></div>
+  <button class="btn-finish" onclick="finishQuiz()">🏁 Selesai & Lihat Nilai</button>
+  <div class="final-panel" id="final-panel">
+    <h2>🎨 Hasil Kuis PowerPoint</h2>
+    <div class="final-score" id="final-score-val">—</div>
+    <div class="final-grade" id="final-grade">—</div>
+    <div class="final-detail">
+      <div class="f-box"><div class="n" id="f-pg">—</div><div class="l">Nilai PG (40 soal)</div></div>
+      <div class="f-box"><div class="n" id="f-essay">—</div><div class="l">Essay Dijawab</div></div>
+      <div class="f-box"><div class="n" id="f-total">—</div><div class="l">Total Estimasi</div></div>
+    </div>
+    <p style="color:#666;font-size:.85rem;margin-top:8px">*Nilai essay final ditentukan instruktur.</p>
+    <button class="btn-reset" onclick="resetQuiz()">🔄 Ulangi Kuis</button>
+  </div>
+</div>
+<script>
+const pgQ=[
+  // MUDAH 1-15
+  {id:1,q:"Untuk memulai Slide Show dari slide aktif (bukan dari awal), shortcut yang digunakan adalah...",opts:["F5","Shift + F5","Ctrl + F5","Alt + F5"],ans:1,lv:"easy",exp:"Shift + F5 memulai Slide Show dari slide yang sedang aktif. F5 memulai dari slide pertama.",comp:"Interface"},
+  {id:2,q:"Slide Master di PowerPoint digunakan untuk...",opts:["Mengatur urutan slide","Mengedit template induk yang mempengaruhi semua slide sekaligus","Membuat slide baru","Menyimpan presentasi"],ans:1,lv:"easy",exp:"Slide Master adalah template induk — perubahan di Slide Master (font, warna, logo) otomatis berlaku ke semua slide.",comp:"Desain"},
+  {id:3,q:"Prinsip 'One Slide, One Message' berarti...",opts:["Satu slide hanya boleh berisi satu gambar","Setiap slide hanya menyampaikan satu pesan/poin utama","Presentasi hanya boleh satu slide","Satu slide satu animasi"],ans:1,lv:"easy",exp:"One Slide One Message adalah prinsip desain — jika ada dua poin penting, buat dua slide terpisah agar setiap pesan tersampaikan dengan jelas.",comp:"Desain"},
+  {id:4,q:"Speaker Notes di PowerPoint terletak di...",opts:["Bagian atas slide","Panel kanan","Panel bawah slide yang hanya terlihat oleh presenter","Di dalam body teks slide"],ans:2,lv:"easy",exp:"Speaker Notes ada di panel bawah area editing — hanya tampil di Presenter View, tidak terlihat oleh audiens saat Slide Show.",comp:"Interface"},
+  {id:5,q:"Shortcut untuk menambahkan slide baru setelah slide aktif adalah...",opts:["Ctrl + N","Ctrl + M","Ctrl + S","Ctrl + D"],ans:1,lv:"easy",exp:"Ctrl + M menambahkan slide baru. Ctrl + D menduplikat slide aktif. Ctrl + N membuat file presentasi baru.",comp:"Interface"},
+  {id:6,q:"Format ekspor yang paling tepat untuk berbagi presentasi kepada orang lain agar tidak bisa diedit adalah...",opts:[".pptx",".ppsx",".pdf",".docx"],ans:2,lv:"easy",exp:"PDF tidak bisa diedit (tanpa software khusus) dan ukurannya kecil — ideal untuk distribusi ke audiens atau klien.",comp:"Teknis"},
+  {id:7,q:"Transisi antar slide yang paling direkomendasikan untuk presentasi profesional adalah...",opts:["Random Bars","Checkerboard","Fade atau Morph","Ripple"],ans:2,lv:"easy",exp:"Fade (sederhana, elegan) dan Morph (mulus, modern) adalah pilihan profesional. Transisi dekoratif seperti Ripple atau Checkerboard distraktif.",comp:"Animasi"},
+  {id:8,q:"Untuk menekan tombol yang mengosongkan layar menjadi hitam saat presentasi berlangsung, tekan...",opts:["Escape","B","N","H"],ans:1,lv:"easy",exp:"Tekan B (Black) untuk layar hitam, W (White) untuk layar putih. Berguna untuk mengalihkan fokus audiens ke pembicara.",comp:"Teknis"},
+  {id:9,q:"Berapa maksimum font yang disarankan dalam satu presentasi profesional?",opts:["1 font saja","2 font (judul + body)","4 font","Tidak ada batasan"],ans:1,lv:"easy",exp:"Maksimal 2 font: satu untuk judul (display font) dan satu untuk body text. Lebih dari 2 membuat presentasi tampak tidak konsisten.",comp:"Desain"},
+  {id:10,q:"Tab Design di PowerPoint digunakan untuk...",opts:["Menambahkan animasi","Memilih tema, warna, dan font secara keseluruhan","Menyisipkan gambar","Mengatur transisi"],ans:1,lv:"easy",exp:"Tab Design berisi Themes (desain keseluruhan), Variants (variasi warna/font/efek), dan Background Styles untuk tampilan presentasi.",comp:"Desain"},
+  {id:11,q:"Ukuran font minimum yang disarankan untuk body text di slide presentasi agar bisa dibaca dari jarak jauh adalah...",opts:["10 pt","14 pt","18 pt","24 pt"],ans:2,lv:"easy",exp:"Minimum 18pt untuk body text. Audiens biasanya melihat dari jarak 3-5 meter atau lebih — teks kecil tidak akan terbaca.",comp:"Desain"},
+  {id:12,q:"Untuk menduplikat slide aktif, shortcut yang digunakan adalah...",opts:["Ctrl + C lalu Ctrl + V","Ctrl + D","Ctrl + M","Shift + Enter"],ans:1,lv:"easy",exp:"Ctrl + D menduplikat slide dan menempatkan salinannya tepat setelah slide asli — lebih cepat dari Copy-Paste.",comp:"Interface"},
+  {id:13,q:"Fitur Align & Distribute di PowerPoint digunakan untuk...",opts:["Menganimasikan elemen","Meratakan dan menyamakan jarak antar objek secara presisi","Membuat teks tegak lurus","Mengunci posisi objek"],ans:1,lv:"easy",exp:"Align meratakan objek ke kiri/tengah/kanan/atas/tengah/bawah. Distribute membuat jarak antar objek sama rata — menggantikan 'kira-kira' manual.",comp:"Desain"},
+  {id:14,q:"SmartArt di PowerPoint paling berguna untuk membuat...",opts:["Grafik batang","Diagram proses, hierarki, hubungan, atau siklus","Tabel data angka","Animasi kompleks"],ans:1,lv:"easy",exp:"SmartArt menyediakan diagram visual siap pakai: Process (alur), Hierarchy (org chart), Cycle (siklus), Relationship, Matrix, dll.",comp:"Elemen Visual"},
+  {id:15,q:"Presenter View di PowerPoint menampilkan...",opts:["Slide saat ini saja","Slide berikutnya, catatan pembicara, dan timer — hanya untuk pembicara","Semua slide dalam grid","Slide dalam tampilan hitam-putih"],ans:1,lv:"easy",exp:"Presenter View (hanya terlihat di layar pembicara): slide saat ini, preview slide berikutnya, speaker notes, dan timer. Audiens tetap melihat tampilan normal.",comp:"Teknis"},
+
+  // MENENGAH 16-35
+  {id:16,q:"Framework AIDA dalam presentasi singkatan dari...",opts:["Animation, Image, Design, Alignment","Attention, Interest, Desire, Action","Audio, Intro, Data, Action","Agenda, Information, Discussion, Ask"],ans:1,lv:"med",exp:"AIDA: Attention (pancing perhatian dengan hook), Interest (bangun minat dengan masalah), Desire (ciptakan keinginan dengan solusi), Action (dorong tindakan dengan CTA).",comp:"Storytelling"},
+  {id:17,q:"Apa yang dimaksud dengan 'Hook' dalam konteks presentasi bisnis?",opts:["Tombol attachment di PPT","Kalimat/pernyataan pembuka yang menarik perhatian dan membuat audiens ingin terus mendengarkan","Logo perusahaan di slide pertama","Daftar agenda di awal"],ans:1,lv:"med",exp:"Hook adalah pernyataan, pertanyaan, fakta mengejutkan, atau cerita singkat di slide pertama yang langsung menarik perhatian dan memancing rasa ingin tahu.",comp:"Storytelling"},
+  {id:18,q:"Dalam presentasi bisnis, grafik yang paling tepat untuk menampilkan pangsa pasar (market share) per produk adalah...",opts:["Line Chart","Bar Chart","Pie Chart / Donut Chart","Scatter Plot"],ans:2,lv:"med",exp:"Pie/Donut Chart ideal untuk menampilkan komposisi/proporsi — bagaimana bagian-bagian membentuk keseluruhan (100%). Cocok untuk market share.",comp:"Visualisasi Data"},
+  {id:19,q:"Apa itu 'Morph Transition' di PowerPoint?",opts:["Animasi teks yang berputar","Transisi yang membuat elemen bergerak mulus dari posisi satu ke posisi lain antara dua slide","Efek zoom pada gambar","Transisi random yang dihasilkan AI"],ans:1,lv:"med",exp:"Morph membuat animasi mulus antara dua slide yang memiliki elemen serupa. PowerPoint mendeteksi elemen yang sama dan 'menganimasikan' perpindahannya.",comp:"Animasi"},
+  {id:20,q:"Prinsip 60-30-10 dalam desain warna presentasi artinya...",opts:["60 slide/30 gambar/10 teks","60% warna dominan, 30% warna sekunder, 10% warna aksen","Font 60pt/30pt/10pt","60% teks, 30% visual, 10% data"],ans:1,lv:"med",exp:"60-30-10 adalah panduan proporsi warna: 60% warna utama/dominan (biasanya latar), 30% warna pendukung, 10% warna aksen untuk highlight/CTA.",comp:"Desain"},
+  {id:21,q:"Framework 'Before-After-Bridge' dalam presentasi menggunakan urutan...",opts:["Data sebelum dan sesudah","Masalah yang ada saat ini → gambaran solusi ideal → cara untuk mencapainya","Slide sebelum dan sesudah diedit → cara memperbaiki","Kondisi pesaing → kondisi kita → rencana ke depan"],ans:1,lv:"med",exp:"BAB: Before (kondisi menyakitkan saat ini) → After (gambaran dunia yang lebih baik) → Bridge (solusi/produk yang menghubungkan). Sangat efektif untuk pitching.",comp:"Storytelling"},
+  {id:22,q:"Seorang presenter ingin menampilkan tren penjualan selama 12 bulan terakhir di slide. Chart yang paling tepat adalah...",opts:["Pie Chart","Line Chart","Donut Chart","Icon Array"],ans:1,lv:"med",exp:"Line Chart ideal untuk menampilkan tren sepanjang waktu — garis yang naik/turun langsung terlihat visual.",comp:"Visualisasi Data"},
+  {id:23,q:"Animasi 'Appear' pada bullet points digunakan agar...",opts:["Teks terlihat lebih menarik secara visual","Audiens bisa membaca satu poin sebelum poin berikutnya muncul — menjaga fokus","Memperpanjang durasi presentasi","Membuat file lebih kecil"],ans:1,lv:"med",exp:"Appear/Fade satu per satu untuk bullet memaksa audiens fokus ke poin yang sedang dibahas, bukan membaca slide lebih dulu sambil menunggu presenter.",comp:"Animasi"},
+  {id:24,q:"CTA (Call-to-Action) di akhir presentasi bisnis haruslah...",opts:["Panjang dan menjelaskan semua opsi yang tersedia","Spesifik, jelas, dan hanya satu tindakan utama yang diminta","Berisi pertanyaan terbuka","Sama dengan slide pembuka"],ans:1,lv:"med",exp:"CTA terbaik: satu tindakan, spesifik (bukan 'hubungi kami' tapi 'WhatsApp kami sekarang di...'), ada urgensi/manfaat yang jelas.",comp:"Storytelling"},
+  {id:25,q:"Fitur 'Section Zoom' di PowerPoint berguna untuk...",opts:["Memperbesar gambar dalam slide","Membuat thumbnail interaktif ke slide/section lain yang bisa diklik saat presentasi","Membuat animasi zoom pada objek","Menyembunyikan bagian slide"],ans:1,lv:"med",exp:"Section Zoom menyisipkan thumbnail slide/section yang bisa diklik saat Slide Show untuk loncat non-linear — sangat berguna untuk presentasi interaktif atau FAQ.",comp:"Teknis Lanjutan"},
+  {id:26,q:"Mengapa terlalu banyak animasi dalam presentasi bisa berbahaya?",opts:["Membuat file ukurannya terlalu besar","Distraktif dan mengalihkan perhatian dari konten ke efek visual","Membuat PowerPoint jadi lambat","Tidak bisa di-export ke PDF"],ans:1,lv:"med",exp:"Animasi berlebihan membuat audiens fokus ke efeknya, bukan kontennya. Animasi harus punya tujuan naratif — bukan sekadar hiburan.",comp:"Animasi"},
+  {id:27,q:"'Data Ink Ratio' oleh Edward Tufte dalam konteks visualisasi data berarti...",opts:["Rasio warna data vs warna latar","Prinsip menghapus semua elemen visual yang tidak menambah informasi — semakin bersih = semakin kuat","Menggunakan warna berbeda untuk setiap data point","Menambahkan sebanyak mungkin data dalam satu chart"],ans:1,lv:"med",exp:"Tingkatkan Data Ink Ratio: hapus gridline, border, legenda berlebih, background chart. Setiap 'tinta' di chart harus membawa informasi.",comp:"Visualisasi Data"},
+  {id:28,q:"'Rule of Three' dalam public speaking berarti...",opts:["Presentasi harus 3 slide","Sampaikan maksimal 3 poin utama yang mudah diingat audiens","Gunakan 3 jenis font","Berbicara dengan kecepatan 3 kata/detik"],ans:1,lv:"med",exp:"Rule of Three: otak manusia mudah mengingat tiga hal. Buat presentasi berputar di sekitar 3 takeaway utama — audiens akan lebih mudah ingat.",comp:"Storytelling"},
+  {id:29,q:"Untuk mengekspor presentasi sebagai file video (.mp4), caranya adalah...",opts:["Save As → MP4","File → Export → Create a Video","Tab Slide Show → Record → Export","Tab Animations → Export Video"],ans:1,lv:"med",exp:"File → Export → Create a Video. Bisa atur kualitas video dan gunakan timing otomatis atau manual. Hasilnya file MP4 yang bisa dibagikan.",comp:"Teknis"},
+  {id:30,q:"'Presenter View' paling berguna karena...",opts:["Membuat slide terlihat lebih besar","Pembicara bisa melihat notes, timer, dan slide berikutnya tanpa audiens melihat","Memungkinkan dua orang presentasi bersamaan","Menyembunyikan slide yang tidak ingin ditampilkan"],ans:1,lv:"med",exp:"Presenter View memberikan 'cockpit' untuk pembicara: slide saat ini + preview slide berikutnya + speaker notes + timer — tanpa audiens tahu.",comp:"Teknis"},
+  {id:31,q:"Dalam framework Problem-Solution untuk presentasi pitching, urutan slide yang benar adalah...",opts:["Solusi → Masalah → Data → CTA","Hook → Masalah → Bridge → Solusi → Bukti → CTA","Data → Masalah → Solusi → Hook","CTA → Hook → Solusi → Masalah"],ans:1,lv:"med",exp:"Problem-Solution yang efektif: mulai dengan Hook yang menarik perhatian → paparkan Masalah yang dirasakan → Bridge (ada cara lebih baik) → Solusi → Bukti/Data → CTA.",comp:"Storytelling"},
+  {id:32,q:"Bagaimana cara terbaik menampilkan angka '450% ROAS' sebagai highlight dalam slide pitching?",opts:["Masukkan dalam tabel bersama angka lain","Tampilkan sebagai Big Number — ukuran sangat besar (80-120pt) di tengah slide yang bersih","Masukkan dalam bullet list","Tampilkan dalam chart bersama data lain"],ans:1,lv:"med",exp:"Big Number adalah teknik powerful: satu angka impresif mendominasi slide yang hampir kosong. Ukuran besar + whitespace = audiens langsung focus ke angka itu.",comp:"Visualisasi Data"},
+  {id:33,q:"Prompt AI yang paling efektif untuk membuat outline presentasi adalah...",opts:["'Buat outline presentasi'","'Buat outline 10 slide untuk pitching investor tentang platform edukasi digital untuk UMKM, framework Problem-Solution, audiens: pengusaha Jawa Tengah'","'Presentation outline please'","'Outline untuk PowerPoint saya'"],ans:1,lv:"med",exp:"Prompt terbaik sangat spesifik: jumlah slide, tujuan, topik, framework, dan konteks audiens. Semakin spesifik → outline semakin relevan dan siap digunakan.",comp:"AI Integration"},
+  {id:34,q:"Apa perbedaan .pptx dan .ppsx?",opts:["ppsx lebih kecil ukurannya","ppsx langsung membuka Slide Show tanpa masuk mode edit, pptx membuka mode editing","Tidak ada perbedaan","ppsx hanya bisa dibuka di Mac"],ans:1,lv:"med",exp:".ppsx (PowerPoint Show) langsung meluncurkan Slide Show saat dibuka. .pptx membuka di mode editing. Bagikan .ppsx ke audiens yang hanya perlu menonton.",comp:"Teknis"},
+  {id:35,q:"Icon Array dalam visualisasi data digunakan untuk...",opts:["Membuat ikon bergerak","Menampilkan proporsi menggunakan ikon (misal: 3 dari 10 orang = 3 ikon berwarna, 7 ikon abu)","Menggantikan grafik batang","Membuat infografis kompleks"],ans:1,lv:"med",exp:"Icon Array (People Chart/Waffle Chart) membuat proporsi terasa lebih manusiawi dan mudah dimengerti. '1 dari 4 pelanggan' lebih berkesan dari '25%' di slide.",comp:"Visualisasi Data"},
+
+  // SULIT 36-40
+  {id:36,q:"Seorang desainer membuat presentasi 20 slide dan ingin mengubah font heading di SEMUA slide sekaligus tanpa mengedit satu per satu. Cara yang paling efisien adalah...",opts:["Ctrl + A → ganti font","Tab View → Slide Master → ubah font di Master → Close Master View","Find & Replace font","Ubah tema dan pilih font baru"],ans:1,lv:"hard",exp:"Slide Master adalah satu-satunya cara mengubah semua slide sekaligus. Perubahan di Master menetes ke semua slide layout di bawahnya.",comp:"Desain"},
+  {id:37,q:"Klien meminta presentasi yang bisa 'dijelajahi' non-linear saat meeting (tidak harus dari slide 1 ke slide terakhir). Fitur PowerPoint yang paling tepat adalah...",opts:["Custom Slide Show","Summary Zoom atau Section Zoom dengan hyperlink antar section","Slide Sorter View","Multiple Windows"],ans:1,lv:"hard",exp:"Summary Zoom membuat halaman navigasi interaktif — klik thumbnail section untuk loncat ke sana. Dikombinasi hyperlink, presenter bisa navigasi bebas sesuai diskusi.",comp:"Teknis Lanjutan"},
+  {id:38,q:"Untuk membuat transisi Morph yang sempurna antara slide 'overview diagram' dan slide 'zoom ke satu bagian diagram', langkah yang benar adalah...",opts:["Buat slide baru, hapus semua elemen, gambar ulang dari nol","Duplikat slide → perbesar/ubah posisi elemen yang ingin di-zoom → apply Morph transition → PowerPoint akan animasikan perpindahannya","Gunakan animasi Zoom pada elemen","Buat GIF dan sisipkan"],ans:1,lv:"hard",exp:"Kunci Morph: DUPLIKAT slide (Ctrl+D) → ubah posisi/ukuran elemen di slide salinan → apply Morph. PowerPoint mendeteksi elemen yang sama dan menganimasi transisinya secara otomatis.",comp:"Animasi"},
+  {id:39,q:"Sebuah presentasi pitching 15 menit memiliki 25 slide. Masalah apa yang mungkin terjadi dan apa solusinya?",opts:["Tidak ada masalah — semakin banyak slide semakin baik","Terlalu banyak slide untuk 15 menit (idealnya 1 slide = 1-2 menit), perlu dipangkas ke 10-15 slide atau tingkatkan kecepatan","Kurangi animasi agar lebih cepat","Export ke PDF agar lebih ringan"],ans:1,lv:"hard",exp:"Aturan umum: 1 slide per 1-2 menit. 25 slide untuk 15 menit = terlalu cepat atau waktu habis. Solusi: pangkas slide, gabungkan konten, atau perpanjang slot waktu.",comp:"Storytelling"},
+  {id:40,q:"Saat menggunakan AI untuk membuat konten presentasi, langkah verifikasi yang WAJIB dilakukan sebelum presentasi adalah...",opts:["Tidak perlu verifikasi — AI selalu akurat","Cek semua fakta, angka, dan klaim dari AI ke sumber primer; pastikan konten relevan dengan konteks lokal/audiens spesifik; edit bahasa agar alami dan sesuai voice kamu","Hanya cek typo","Jalankan Spelling Check saja"],ans:1,lv:"hard",exp:"AI bisa salah pada fakta spesifik, data terbaru, atau konteks lokal. Presenter bertanggung jawab penuh atas keakuratan konten — selalu verifikasi ke sumber asli sebelum presentasi.",comp:"AI Integration"},
+];
+
+const essayQ=[
+  {id:1,q:"Jelaskan framework AIDA dalam konteks presentasi bisnis. Berikan contoh konkret penerapannya untuk presentasi pitching sebuah aplikasi kursus online kepada investor.",lv:"med",pts:10,rubrik:["Definisi 4 tahap AIDA yang benar (4 poin)","Contoh konkret tiap tahap untuk kasus aplikasi kursus (4 poin)","Penjelasan mengapa framework ini efektif untuk pitching (2 poin)"]},
+  {id:2,q:"Jelaskan perbedaan antara animasi yang EFEKTIF dan animasi yang KONTRAPRODUKTIF dalam presentasi. Berikan contoh minimal 3 jenis animasi yang tepat digunakan dan 3 yang harus dihindari, beserta alasannya.",lv:"med",pts:10,rubrik:["Definisi animasi efektif vs kontraproduktif (2 poin)","3 animasi yang tepat + alasan (3 poin)","3 animasi yang harus dihindari + alasan (3 poin)","Prinsip umum kapan menggunakan animasi (2 poin)"]},
+  {id:3,q:"Kamu diminta membuat presentasi laporan keuangan tahunan untuk disampaikan kepada direksi. Data yang tersedia: total pendapatan per kuartal, biaya operasional bulanan, dan pertumbuhan YoY. Tentukan: (a) framework storytelling yang tepat, (b) jenis chart untuk masing-masing data, dan (c) bagaimana AI bisa membantu dalam proses ini.",lv:"hard",pts:10,rubrik:["Pilihan framework yang tepat dengan alasan (2 poin)","Jenis chart untuk setiap tipe data + alasan (3 poin)","Cara konkret menggunakan AI (outline, copywriting, insight) (3 poin)","Checklist yang dilakukan sebelum presentasi ke direksi (2 poin)"]},
+  {id:4,q:"Jelaskan apa itu Slide Master dan bagaimana penggunaannya bisa menghemat waktu secara signifikan dalam produksi presentasi perusahaan. Berikan contoh praktis 3 hal yang sebaiknya diatur di Slide Master.",lv:"easy",pts:10,rubrik:["Definisi Slide Master yang benar (2 poin)","Cara mengakses dan mengedit Slide Master (2 poin)","3 contoh konkret pengaturan di Slide Master (4 poin)","Penjelasan penghematan waktu (2 poin)"]},
+  {id:5,q:"Jelaskan konsep 'visual hierarchy' dalam desain slide PowerPoint. Berikan 5 teknik konkret untuk menciptakan visual hierarchy yang efektif, dan jelaskan bagaimana masing-masing teknik bekerja.",lv:"med",pts:10,rubrik:["Definisi visual hierarchy yang tepat (2 poin)","5 teknik yang berbeda dan benar (5 poin — 1 per teknik)","Penjelasan cara kerja masing-masing teknik (2 poin)","Contoh penerapan dalam konteks nyata (1 poin)"]},
+  {id:6,q:"Rancang workflow lengkap pembuatan presentasi pitching 12 slide menggunakan AI dari nol. Jelaskan di setiap fase: apa yang dilakukan, tools AI apa yang digunakan, dan apa outputnya. Sertakan contoh prompt untuk 2 fase berbeda.",lv:"hard",pts:10,rubrik:["Minimal 6 fase workflow yang logis dan berurutan (3 poin)","Penjelasan tools AI yang digunakan per fase (2 poin)","Output yang jelas per fase (2 poin)","2 contoh prompt yang spesifik dan efektif (3 poin)"]},
+  {id:7,q:"Apa itu Speaker Notes yang efektif? Jelaskan perbedaan antara Speaker Notes yang baik dan yang buruk, dan berikan contoh konten Speaker Notes untuk slide 'Masalah' dalam presentasi Problem-Solution.",lv:"easy",pts:10,rubrik:["Definisi Speaker Notes yang benar (1 poin)","Perbedaan notes yang baik vs buruk (3 poin)","Contoh konten notes untuk slide Masalah yang lengkap (5 poin)","Tips menggunakan Presenter View (1 poin)"]},
+  {id:8,q:"Sebuah perusahaan UMKM ingin membuat presentasi company profile untuk calon mitra. Bantu mereka: (a) tentukan framework yang tepat, (b) buat outline 8 slide dengan judul setiap slide, (c) jelaskan desain visual yang cocok.",lv:"med",pts:10,rubrik:["Framework yang tepat + alasan (2 poin)","8 slide dengan judul yang relevan dan berurutan (4 poin)","Rekomendasi desain visual yang detail (warna, font, gaya) (4 poin)"]},
+  {id:9,q:"Jelaskan 5 kesalahan desain paling umum yang membuat presentasi terlihat tidak profesional, dan berikan solusi konkret untuk masing-masing kesalahan.",lv:"easy",pts:10,rubrik:["5 kesalahan yang berbeda dan umum terjadi (5 poin)","Solusi konkret yang bisa diterapkan langsung untuk setiap kesalahan (5 poin)"]},
+  {id:10,q:"Mengapa 'storytelling' lebih efektif daripada sekadar menyampaikan data dan fakta dalam presentasi? Jelaskan dari sisi psikologi audiens, dan berikan contoh nyata bagaimana mengubah slide 'data mentah' menjadi slide yang menggunakan teknik storytelling.",lv:"hard",pts:10,rubrik:["Alasan psikologis storytelling lebih efektif (3 poin)","Perbedaan 'data mentah' vs 'data dalam cerita' (2 poin)","Contoh transformasi slide konkret (3 poin)","Teknik storytelling spesifik yang digunakan (2 poin)"]},
+];
+
+let scores={answered:0,correct:0,wrong:0};
+let answered={},selected={},essayFilled={};
+
+function lTag(l){
+  if(l==='easy')return'<span class="tag tag-easy">Mudah</span>';
+  if(l==='hard')return'<span class="tag tag-hard">Sulit</span>';
+  return'<span class="tag tag-med">Menengah</span>';
+}
+function renderPG(){
+  const c=document.getElementById('pg-container');c.innerHTML='';
+  pgQ.forEach(q=>{
+    const d=document.createElement('div');d.className='q-card';d.id='pg-'+q.id;
+    d.innerHTML=`<div class="q-header" onclick="toggleCard('pgb-${q.id}')">
+      <div class="q-num">${q.id}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-status" id="st-${q.id}">⭕</div>
+    </div>
+    <div class="q-body" id="pgb-${q.id}" style="display:none">
+      <div class="q-meta">Kompetensi: ${q.comp} ${lTag(q.lv)}</div>
+      <div class="options" id="opts-${q.id}">
+        ${q.opts.map((o,i)=>`<div class="opt" id="opt-${q.id}-${i}" onclick="selOpt(${q.id},${i})">
+          <span class="opt-letter">${['A','B','C','D'][i]}</span><span>${o}</span></div>`).join('')}
+      </div>
+      <button class="btn-submit" id="sub-${q.id}" onclick="submitPG(${q.id})" disabled>Cek Jawaban</button>
+      <div class="explanation" id="exp-${q.id}">
+        <div class="result-label" id="rl-${q.id}"></div>
+        <strong>Pembahasan:</strong> ${q.exp}
+      </div>
+    </div>`;
+    c.appendChild(d);
+  });
+}
+function renderEssay(){
+  const c=document.getElementById('essay-container');c.innerHTML='';
+  essayQ.forEach((q,qi)=>{
+    const d=document.createElement('div');d.className='essay-card';
+    d.innerHTML=`<div class="q-header-e"><div class="q-num">${qi+1}</div>
+      <div><div class="q-text">${q.q}</div>
+      <div class="q-meta" style="margin-top:6px">Poin: ${q.pts} ${lTag(q.lv)}</div></div></div>
+      <textarea class="essay-textarea" id="ea-${q.id}" placeholder="Tulis jawaban Anda di sini..." oninput="essayChanged(${q.id},this.value)"></textarea>
+      <button class="toggle-rubrik" onclick="toggleR('rb-${q.id}')">📋 Lihat Panduan Penilaian</button>
+      <div class="rubrik" id="rb-${q.id}" style="display:none">
+        <strong>Panduan Penilaian (Total ${q.pts} poin):</strong>
+        <ul>${q.rubrik.map(r=>`<li>${r}</li>`).join('')}</ul>
+      </div>`;
+    c.appendChild(d);
+  });
+}
+function toggleCard(id){const e=document.getElementById(id);e.style.display=e.style.display==='none'?'block':'none';}
+function toggleR(id){const e=document.getElementById(id);e.style.display=e.style.display==='none'?'block':'none';}
+function selOpt(qid,idx){
+  if(answered[qid])return;
+  selected[qid]=idx;
+  document.querySelectorAll(`#opts-${qid} .opt`).forEach((e,i)=>{
+    e.className='opt'+(i===idx?' selected':'');
+  });
+  document.getElementById('sub-'+qid).disabled=false;
+}
+function submitPG(qid){
+  if(answered[qid])return;
+  answered[qid]=true;
+  const q=pgQ.find(x=>x.id===qid);
+  const u=selected[qid],ok=u===q.ans;
+  document.querySelectorAll(`#opts-${qid} .opt`).forEach((e,i)=>{
+    let cl='opt disabled';
+    if(i===q.ans)cl+=' correct';
+    else if(i===u&&!ok)cl+=' wrong';
+    e.className=cl;e.onclick=null;
+  });
+  const ex=document.getElementById('exp-'+qid);ex.classList.add('show');
+  const rl=document.getElementById('rl-'+qid);
+  if(ok){rl.textContent='✅ Jawaban Benar!';rl.className='result-label correct';scores.correct++;}
+  else{rl.textContent=`❌ Salah. Benar: ${['A','B','C','D'][q.ans]}`;rl.className='result-label wrong';scores.wrong++;}
+  scores.answered++;
+  document.getElementById('sub-'+qid).disabled=true;
+  document.getElementById('st-'+qid).textContent=ok?'✅':'❌';
+  updatePanel();
+}
+function essayChanged(id,v){essayFilled[id]=v.trim().length>0;updateProgress();}
+function updatePanel(){
+  document.getElementById('sc-answered').textContent=scores.answered;
+  document.getElementById('sc-correct').textContent=scores.correct;
+  document.getElementById('sc-wrong').textContent=scores.wrong;
+  document.getElementById('sc-score').textContent=Math.round((scores.correct/pgQ.length)*60);
+  updateProgress();
+}
+function updateProgress(){
+  const ed=Object.values(essayFilled).filter(Boolean).length;
+  const total=scores.answered+ed;
+  const pct=Math.round((total/50)*100);
+  document.getElementById('prog-text').textContent=`${total} dari 50 soal dijawab`;
+  document.getElementById('prog-pct').textContent=`${pct}%`;
+  document.getElementById('prog-fill').style.width=`${pct}%`;
+}
+function finishQuiz(){
+  const pg=Math.round((scores.correct/pgQ.length)*60);
+  const ea=Object.values(essayFilled).filter(Boolean).length;
+  const estE=Math.round((ea/essayQ.length)*100);
+  const tot=Math.round(pg*0.6+estE*0.4);
+  document.getElementById('f-pg').textContent=pg+'/60';
+  document.getElementById('f-essay').textContent=ea+'/10 dijawab';
+  document.getElementById('f-total').textContent=tot;
+  let gr,gc;
+  if(tot>=90){gr='A — Sangat Kompeten 🏆';gc='grade-A';}
+  else if(tot>=75){gr='B — Kompeten ✅';gc='grade-B';}
+  else if(tot>=65){gr='C — Cukup Kompeten 📚';gc='grade-C';}
+  else{gr='D — Perlu Remedial 📖';gc='grade-D';}
+  document.getElementById('final-score-val').textContent=tot;
+  const ge=document.getElementById('final-grade');ge.textContent=gr;ge.className='final-grade '+gc;
+  const p=document.getElementById('final-panel');p.classList.add('show');p.scrollIntoView({behavior:'smooth'});
+}
+function resetQuiz(){
+  scores={answered:0,correct:0,wrong:0};answered={};selected={};essayFilled={};
+  updatePanel();document.getElementById('final-panel').classList.remove('show');
+  renderPG();renderEssay();window.scrollTo({top:0,behavior:'smooth'});
+}
+renderPG();renderEssay();
+</script>
+</body>
+</html>
